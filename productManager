@@ -1,0 +1,55 @@
+package cinevault;
+
+import java.util.*;
+
+public class ProductManager <T extends Comparable<T>> {
+    private List<Product<T>> movies = new ArrayList<>();
+    private Set<String> genres = new HashSet<>();
+    private Queue<Product<T>> watchedQueue = new LinkedList<>();
+    
+    public void addMovie(Product<T> movie){
+        movies.add(movie);
+        genres.add(movie.getGenre().toString());
+    }
+    
+    public boolean isIdExist(int id){
+        return movies.stream().anyMatch(m -> m.getId()== id);
+    }
+    
+    public boolean removeMovieById(int id){
+        return movies.removeIf(movie -> movie.getId()==id);
+    }
+    
+    public List<Product<T>> searchByTitleAndGenre (String title, T genre){
+        return movies.stream()
+                .filter(m -> m.getTitle().equalsIgnoreCase(title) && m.getGenre().equals(genre))
+                .toList();
+    }
+    
+    public Product <T> findMovieById(int id){
+        return movies.stream()
+                .filter(m -> m.getId()== id)
+                .findFirst()
+                .orElse(null);
+    }
+    
+    public void displayAllSorted() {
+        movies.stream().sorted().forEach(System.out::println);
+    }
+    
+    public void displayUniqueGenres() {
+        System.out.println("Genre unik yang tersedia: ");
+        for (String genre : genres){
+            System.out.println("- "+ genre);
+        }
+    }
+    
+    public void addToWatchQueue(Product<T> movie){
+        watchedQueue.add(movie);
+    }
+    
+    public void displayWatchedQueue(){
+        watchedQueue.forEach(System.out::println);
+    }
+
+}
