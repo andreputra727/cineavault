@@ -1,0 +1,115 @@
+package cinevault;
+
+import java.util.Scanner;
+
+public class MarketPlace {
+
+    public static void main(String[] args) {
+        Scanner scn = new Scanner(System.in);
+        ProductManager<String> cineVault = new ProductManager<>();
+        
+        cineVault.addMovie(new Product<>(1, "Inception", "Sci-fi", 8.8));
+        cineVault.addMovie (new Product<>(2, "The Godfather", "Crime", 9.2));
+        cineVault.addMovie (new Product<>(3, "Interstellar", "Sci-fi", 8.6));
+        cineVault.addMovie (new Product<>(4, "Parasite", "Thriller", 8.6));
+        
+        
+        int choice;
+        
+        do{
+            System.out.println("\n===== CineVault Marketplace =====");
+            System.out.println("1. Tampilkan semua film");
+            System.out.println("2. Tambah film");
+            System.out.println("3. Hapus film");
+            System.out.println("4. Tambah ke antrean tontonan");
+            System.out.println("5. Tampilkan antrean tontonan");
+            System.out.println("6. Tampilkan genre unik");
+            System.out.println("7. Cari file berdasarkan ID");
+            System.out.println("0. Keluar");
+            System.out.print("Pilihan Anda : ");
+            choice = scn.nextInt();
+            scn.nextLine();
+            
+            switch (choice){
+                case 1: 
+                    cineVault.displayAllSorted();
+                    break;
+                case 2: 
+                    System.out.print("Masukkan ID : ");
+                    int id = scn.nextInt();
+                    scn.nextLine();
+                    
+                    if (cineVault.isIdExist(id)){
+                        System.out.println("ID tersebut sudah digunakan, silahkan gunakan ID lain.");
+                        break;
+                    }
+                    
+                    System.out.print("Masukkan judul : ");
+                    String title = scn.nextLine();
+                    
+                    System.out.print("Masukkan genre : ");
+                    String genre = scn.nextLine();
+                    
+                    System.out.print("Masukkan rating : ");
+                    double rating = scn.nextDouble();
+                    scn.nextLine();
+                    
+                    cineVault.addMovie(new Product<>(id, title, genre, rating));
+                    System.out.println("Film berhasil ditambahkan");
+                    break;
+                case 3: 
+                    System.out.print("Masukkan ID film yang ingin dihapus : ");
+                    int removeId = scn.nextInt();
+                    boolean removed = cineVault.removeMovieById(removeId);
+                    
+                    if (removed){
+                        System.out.println("Film telah dihapus");
+                    } else {
+                        System.out.println("Film tidak ada dalam daftar");
+                    }
+                    
+                    break;
+                case 4:
+                    System.out.print("Masukkan ID film yang ingin ditonton : ");
+                    int watchId = scn.nextInt();
+                    Product<String> toWatch = cineVault.findMovieById(watchId);
+                    
+                    if (toWatch !=null){
+                        cineVault.addToWatchQueue(toWatch);
+                        System.out.println("Film berhasil ditambahkan ke antrean");
+                    } else {
+                        System.out.println("Film tidak ditemukan");
+                    }
+                    break;
+                case 5: 
+                    cineVault.displayWatchedQueue();
+                    break;
+                case 6: 
+                    cineVault.displayUniqueGenres();
+                    break;
+                case 7: 
+                    System.out.print("Masukkan ID film : ");
+                    int searchId = scn.nextInt();
+                    
+                    Product<String> result = cineVault.findMovieById(searchId) ;
+                    
+                    if (result != null){
+                        System.out.println("Ditemukan : " + result);
+                    }else {
+                        System.out.println("Film tidak ditemukan.");
+                    }
+                    break;
+                case 0:
+                    System.out.println("Terima kasih telah menggunakan CineVault");
+                    break;
+                
+                default:
+                    System.out.println("Pilihan tidak valid");
+                    break;
+            }
+            
+        } while (choice !=0);
+        
+        scn.close();
+    }
+}
