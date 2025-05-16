@@ -1,31 +1,62 @@
 package cinevault;
-
 import java.util.*;
 
+/**
+ * Kelas ProductManager mengelola koleksi film dengan tipe generik T yang dapat dibandingkan
+ * @param <T> Tipe data untuk genre yang harus mengimplementasi interface Comparable
+ */
 public class ProductManager <T extends Comparable<T>> {
+    // Menyimpan daftar film
     private List<Product<T>> movies = new ArrayList<>();
+    // Menyimpan genre unik
     private Set<String> genres = new HashSet<>();
+    // Antrian untuk film yang telah ditonton
     private Queue<Product<T>> watchedQueue = new LinkedList<>();
     
+    /**
+     * Menambahkan film baru ke dalam koleksi
+     * @param movie Film yang akan ditambahkan
+     */
     public void addMovie(Product<T> movie){
         movies.add(movie);
         genres.add(movie.getGenre().toString());
     }
     
+    /**
+     * Memeriksa apakah film dengan ID tertentu sudah ada
+     * @param id ID film yang dicari
+     * @return true jika ID sudah ada, false jika tidak
+     */
     public boolean isIdExist(int id){
         return movies.stream().anyMatch(m -> m.getId()== id);
     }
     
+    /**
+     * Menghapus film berdasarkan ID
+     * @param id ID film yang akan dihapus
+     * @return true jika berhasil dihapus, false jika tidak ditemukan
+     */
     public boolean removeMovieById(int id){
         return movies.removeIf(movie -> movie.getId()==id);
     }
     
+    /**
+     * Mencari film berdasarkan judul dan genre
+     * @param title Judul film yang dicari
+     * @param genre Genre film yang dicari
+     * @return Daftar film yang sesuai dengan kriteria
+     */
     public List<Product<T>> searchByTitleAndGenre (String title, T genre){
         return movies.stream()
                 .filter(m -> m.getTitle().equalsIgnoreCase(title) && m.getGenre().equals(genre))
                 .toList();
     }
     
+    /**
+     * Mencari film berdasarkan ID
+     * @param id ID film yang dicari
+     * @return Film yang ditemukan atau null jika tidak ada
+     */
     public Product <T> findMovieById(int id){
         return movies.stream()
                 .filter(m -> m.getId()== id)
@@ -33,10 +64,16 @@ public class ProductManager <T extends Comparable<T>> {
                 .orElse(null);
     }
     
+    /**
+     * Menampilkan semua film yang diurutkan
+     */
     public void displayAllSorted() {
         movies.stream().sorted().forEach(System.out::println);
     }
     
+    /**
+     * Menampilkan daftar genre unik yang tersedia
+     */
     public void displayUniqueGenres() {
         System.out.println("Genre unik yang tersedia: ");
         for (String genre : genres){
@@ -44,12 +81,18 @@ public class ProductManager <T extends Comparable<T>> {
         }
     }
     
+    /**
+     * Menambahkan film ke antrian yang telah ditonton
+     * @param movie Film yang telah ditonton
+     */
     public void addToWatchQueue(Product<T> movie){
         watchedQueue.add(movie);
     }
     
+    /**
+     * Menampilkan semua film dalam antrian yang telah ditonton
+     */
     public void displayWatchedQueue(){
         watchedQueue.forEach(System.out::println);
     }
-
 }
