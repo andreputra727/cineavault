@@ -2,21 +2,34 @@ package cinevault;
 
 import java.util.Scanner;
 
+/**
+ * Kelas MarketPlace merupakan kelas utama aplikasi CineVault yang mengelola film
+ * Menyediakan menu interaktif untuk pengguna berinteraksi dengan sistem
+ */
 public class MarketPlace {
 
+    /**
+     * Metode main sebagai titik masuk program
+     * @param args Parameter command line (tidak digunakan)
+     */
     public static void main(String[] args) {
+        // Membuat objek Scanner untuk menerima input dari pengguna
         Scanner scn = new Scanner(System.in);
+        // Membuat objek ProductManager untuk mengelola koleksi film
         ProductManager<String> cineVault = new ProductManager<>();
         
+        // Menambahkan beberapa film awal ke dalam sistem
         cineVault.addMovie(new Product<>(1, "Inception", "Sci-fi", 8.8));
         cineVault.addMovie (new Product<>(2, "The Godfather", "Crime", 9.2));
         cineVault.addMovie (new Product<>(3, "Interstellar", "Sci-fi", 8.6));
         cineVault.addMovie (new Product<>(4, "Parasite", "Thriller", 8.6));
         
-        
+        // Variabel untuk menyimpan pilihan menu pengguna
         int choice;
         
+        // Loop menu utama - akan berjalan sampai pengguna memilih untuk keluar (pilihan 0)
         do{
+            // Menampilkan opsi menu
             System.out.println("\n===== CineVault Marketplace =====");
             System.out.println("1. Tampilkan semua film");
             System.out.println("2. Tambah film");
@@ -28,22 +41,27 @@ public class MarketPlace {
             System.out.println("0. Keluar");
             System.out.print("Pilihan Anda : ");
             choice = scn.nextInt();
-            scn.nextLine();
+            scn.nextLine(); // Membersihkan buffer inputan
             
+            // Memproses pilihan pengguna dengan switch-case
             switch (choice){
                 case 1: 
+                    // Menampilkan semua film yang diurutkan berdasarkan genre
                     cineVault.displayAllSorted();
                     break;
                 case 2: 
+                    // Menambahkan film baru
                     System.out.print("Masukkan ID : ");
                     int id = scn.nextInt();
-                    scn.nextLine();
+                    scn.nextLine(); // Membersihkan buffer
                     
+                    // Memeriksa apakah ID sudah digunakan
                     if (cineVault.isIdExist(id)){
                         System.out.println("ID tersebut sudah digunakan, silahkan gunakan ID lain.");
                         break;
                     }
                     
+                    // Meminta input untuk detail film
                     System.out.print("Masukkan judul : ");
                     String title = scn.nextLine();
                     
@@ -52,16 +70,19 @@ public class MarketPlace {
                     
                     System.out.print("Masukkan rating : ");
                     double rating = scn.nextDouble();
-                    scn.nextLine();
+                    scn.nextLine(); // Membersihkan buffer
                     
+                    // Membuat dan menambahkan film baru
                     cineVault.addMovie(new Product<>(id, title, genre, rating));
                     System.out.println("Film berhasil ditambahkan");
                     break;
                 case 3: 
+                    // Menghapus film berdasarkan ID
                     System.out.print("Masukkan ID film yang ingin dihapus : ");
                     int removeId = scn.nextInt();
                     boolean removed = cineVault.removeMovieById(removeId);
                     
+                    // Pesan konfirmasi penghapusan
                     if (removed){
                         System.out.println("Film telah dihapus");
                     } else {
@@ -70,10 +91,12 @@ public class MarketPlace {
                     
                     break;
                 case 4:
+                    // Menambahkan film ke antrean tontonan
                     System.out.print("Masukkan ID film yang ingin ditonton : ");
                     int watchId = scn.nextInt();
                     Product<String> toWatch = cineVault.findMovieById(watchId);
                     
+                    // Memeriksa apakah film ditemukan
                     if (toWatch !=null){
                         cineVault.addToWatchQueue(toWatch);
                         System.out.println("Film berhasil ditambahkan ke antrean");
@@ -82,17 +105,21 @@ public class MarketPlace {
                     }
                     break;
                 case 5: 
+                    // Menampilkan antrean film yang akan ditonton
                     cineVault.displayWatchedQueue();
                     break;
                 case 6: 
+                    // Menampilkan semua genre unik yang tersedia
                     cineVault.displayUniqueGenres();
                     break;
                 case 7: 
+                    // Mencari film berdasarkan ID
                     System.out.print("Masukkan ID film : ");
                     int searchId = scn.nextInt();
                     
-                    Product<String> result = cineVault.findMovieById(searchId) ;
+                    Product<String> result = cineVault.findMovieById(searchId);
                     
+                    // Menampilkan hasil pencarian
                     if (result != null){
                         System.out.println("Ditemukan : " + result);
                     }else {
@@ -100,16 +127,19 @@ public class MarketPlace {
                     }
                     break;
                 case 0:
+                    // Keluar dari aplikasi
                     System.out.println("Terima kasih telah menggunakan CineVault");
                     break;
                 
                 default:
+                    // Menangani pilihan yang tidak valid
                     System.out.println("Pilihan tidak valid");
                     break;
             }
             
-        } while (choice !=0);
+        } while (choice !=0); // Lanjutkan loop selama pilihan bukan 0 (keluar)
         
+        // Menutup Scanner setelah selesai digunakan
         scn.close();
     }
 }
